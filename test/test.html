@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BGFX Test Page</title>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+    var Module;
+    (function() {
+        var canvas = document.getElementById("canvas");
+
+        //make the canvas fullscreen
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        Module = {
+            TOTAL_MEMORY: 256*1024*1024,
+            canvas:       canvas
+        };
+    }());
+    </script>
+    <script src="../bin/bgfx_debug.js"></script>
+    <script src="image.js"></script>
+    <script>
+        window.bgfx = Module;
+
+        var width  = 1280;
+        var height = 720;
+
+        bgfx.init();
+        bgfx.reset(width, height, 0);
+
+        bgfx.setDebug(bgfx.DEBUG_TEXT);
+
+        bgfx.setViewClear(0, bgfx.CLEAR_COLOR|bgfx.CLEAR_DEPTH, 0x303030ff, 1, 0);
+
+        (function render() {
+            bgfx.setViewRect(0, 0, 0, width, height);
+            bgfx.submit(0, 0);
+
+            bgfx.dbgTextClear(0, false);
+            bgfx.dbgTextImage(Math.max(width/2/8, 20)-20, Math.max(height/2/16, 6)-6, 40, 12, s_logo, 160);
+            bgfx.dbgTextPrintf(0, 1, 0x4f, "bgfx/examples/00-helloworld");
+            bgfx.dbgTextPrintf(0, 2, 0x6f, "Description: Initialization and debug text.");
+
+            bgfx.frame();
+
+            requestAnimationFrame(render);
+        }());
+
+    </script
+</body>
+</html>
