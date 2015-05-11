@@ -1,7 +1,7 @@
-BUILD     = debug
-OUTDIR   = bin
-TMPDIR   = tmp
-SRCDIR   = src
+BUILD  = debug
+OUTDIR = bin
+TMPDIR = tmp
+SRCDIR = src
 
 INCLUDES  = -I../bgfx/include -I../bx/include -I../bgfx/3rdparty -I../bgfx/3rdparty/khronos
 DEFINES   =
@@ -17,7 +17,7 @@ EMOPTS    = \
 ifeq ($(BUILD), debug)
 	LINK_OPTS = -O0 -g4 --llvm-lto 0 -s ASSERTIONS=2 --closure 0 -s DEMANGLE_SUPPORT=1
 else ifeq ($(BUILD), release)
-	LINK_OPTS = -O3 --llvm-lto 1 --closure 1
+	LINK_OPTS = -O3 --llvm-lto 1 --closure 0
 endif
 
 all: library
