@@ -1,0 +1,12 @@
+[
+    '_bgfx_init',
+    '_bgfx_reset',
+    '_bgfx_set_debug',
+    '_bgfx_set_view_clear',
+    '_bgfx_set_view_rect',
+    '_bgfx_submit',
+    '_bgfx_dbg_text_clear',
+    '_bgfx_dbg_text_image',
+    '_bgfx_dbg_text_printf',
+    '_bgfx_frame'
+]

@@ -5,10 +5,10 @@
 </head>
 <body>
 
-    <canvas id="canvas"></canvas>
     <script src="../../bin/bgfx_debug.js"></script>
     <script src="image.js"></script>
     <script>
+    (function() {
         var width  = 1280;
         var height = 720;
 
@@ -25,14 +25,16 @@
 
             bgfx.dbgTextClear(0, false);
             bgfx.dbgTextImage(Math.max(width/2/8, 20)-20, Math.max(height/2/16, 6)-6, 40, 12, s_logo, 160);
-            bgfx.dbgTextPrintf(0, 1, 0x4f, "bgfx/examples/00-helloworld");
-            bgfx.dbgTextPrintf(0, 2, 0x6f, "Description: Initialization and debug text.");
+            bgfx.dbgTextPrintf(0, 1, 0x4f, 'bgfx/examples/00-helloworld');
+            bgfx.dbgTextPrintf(0, 2, 0x6f, 'Description: Initialization and debug text');
 
             bgfx.frame();
 
-            requestAnimationFrame(render);
+            setTimeout(function() {
+                requestAnimationFrame(render);
+            }, 500);
         }());
-
+    }());
     </script
 </body>
 </html>
