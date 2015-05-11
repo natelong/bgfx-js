@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BGFX.js 00-helloworld</title>
+    <title>00-helloworld - bgfx.js</title>
 </head>
 <body>
 
-    <script src="../bin/bgfx_release.js"></script>
+    <script src="../bin/bgfx_debug.js"></script>
     <script src="image.js"></script>
     <script>
     (function() {
@@ -30,9 +30,7 @@
 
             bgfx.frame();
 
-            setTimeout(function() {
-                requestAnimationFrame(render);
-            }, 500);
+            requestAnimationFrame(render);
         }());
     }());
     </script
