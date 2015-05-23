@@ -11,7 +11,7 @@ EMOPTS    = \
 	-s NO_EXIT_RUNTIME=1 \
 	-s MODULARIZE=1 \
 	-s EXPORT_NAME=\"_bgfx\" \
-	-s EXPORTED_FUNCTIONS=@exportFunctions.js \
+	-s EXPORTED_FUNCTIONS=@$(SRCDIR)/functions.json \
 	--memory-init-file 0
 
 ifeq ($(BUILD), debug)

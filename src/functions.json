@@ -1,0 +1,21 @@
+[
+    '_bgfx_init',
+    '_bgfx_reset',
+    '_bgfx_set_debug',
+    '_bgfx_set_view_clear',
+    '_bgfx_set_view_rect',
+    '_bgfx_submit',
+    '_bgfx_dbg_text_clear',
+    '_bgfx_dbg_text_image',
+    '_bgfx_dbg_text_printf',
+    '_bgfx_frame',
+    '_bgfx_create_vertex_buffer',
+    '_bgfx_create_index_buffer',
+    '_bgfx_vertex_decl_begin',
+    '_bgfx_vertex_decl_add',
+    '_bgfx_vertex_decl_skip',
+    '_bgfx_vertex_decl_end',
+
+    '_bgfx_create_shader',
+    '_bgfx_create_program'
+]

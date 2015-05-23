@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BGFX Test Page</title>
+    <title>00-helloworld - bgfx.js</title>
 </head>
 <body>
-
     <script src="../../bin/bgfx_debug.js"></script>
     <script src="image.js"></script>
     <script>
@@ -14,9 +13,7 @@
 
         bgfx.init();
         bgfx.reset(width, height, 0);
-
         bgfx.setDebug(bgfx.DEBUG_TEXT);
-
         bgfx.setViewClear(0, bgfx.CLEAR_COLOR|bgfx.CLEAR_DEPTH, 0x303030ff, 1, 0);
 
         (function render() {
@@ -30,9 +27,7 @@
 
             bgfx.frame();
 
-            setTimeout(function() {
-                requestAnimationFrame(render);
-            }, 500);
+            requestAnimationFrame(render);
         }());
     }());
     </script
