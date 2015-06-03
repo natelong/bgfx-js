@@ -15,7 +15,8 @@ EMOPTS    = \
 	--memory-init-file 0
 
 ifeq ($(BUILD), debug)
-	LINK_OPTS = -O0 -g4 --llvm-lto 0 -s ASSERTIONS=2 --closure 0 -s DEMANGLE_SUPPORT=1
+	LINK_OPTS += -O0 -g4 -Wall --llvm-lto 0 -s ASSERTIONS=2 --closure 0 -s DEMANGLE_SUPPORT=1
+	# DEFINES   += -DBGFX_CONFIG_DEBUG=1
 else ifeq ($(BUILD), release)
 	LINK_OPTS = -O3 --llvm-lto 1 --closure 0
 endif
@@ -25,7 +26,8 @@ all: library
 
 library:
 	@mkdir -p $(OUTDIR) $(TMPDIR)
-	$(CXX) $(LINK_OPTS) $(INCLUDES) $(DEFINES) $(EMOPTS) -o $(TMPDIR)/bgfx_$(BUILD).raw.js ../bgfx/src/amalgamated.cpp
+	$(CC)  $(LINK_OPTS) $(INCLUDES) $(DEFINES) $(EMOPTS) -o $(TMPDIR)/shim.bc -c $(SRCDIR)/shim.c
+	$(CXX) $(LINK_OPTS) $(INCLUDES) $(DEFINES) $(EMOPTS) -o $(TMPDIR)/bgfx_$(BUILD).raw.js ../bgfx/src/amalgamated.cpp $(TMPDIR)/shim.bc
 	@cat $(SRCDIR)/header.js            >  $(OUTDIR)/bgfx_$(BUILD).js
 	@cat $(TMPDIR)/bgfx_$(BUILD).raw.js >> $(OUTDIR)/bgfx_$(BUILD).js
 	@cat $(SRCDIR)/footer.js            >> $(OUTDIR)/bgfx_$(BUILD).js
