@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>01-cubes - bgfx.js</title>
+</head>
+<body>
+    <script src="../../bin/bgfx_debug.js"></script>
+    <script>
+    (function() {
+        var ROWS = 1;
+        var COLS = 1;
+        var SHADER_TYPE_VERTEX   = 0;
+        var SHADER_TYPE_FRAGMENT = 1;
+
+        var s_cubeVertices = new Float32Array([
+            -1.0,  1.0,  1.0,  0, 0, 0, 1,
+             1.0,  1.0,  1.0,  1, 0, 0, 1,
+            -1.0, -1.0,  1.0,  0, 1, 0, 1,
+             1.0, -1.0,  1.0,  1, 1, 0, 1,
+            -1.0,  1.0, -1.0,  0, 0, 1, 1,
+             1.0,  1.0, -1.0,  1, 0, 1, 1,
+            -1.0, -1.0, -1.0,  0, 1, 1, 1,
+             1.0, -1.0, -1.0,  1, 1, 1, 1,
+        ]);
+
+        var s_cubeIndices = new Uint16Array([
+            0, 1, 2, // 0
+            1, 3, 2,
+            4, 6, 5, // 2
+            5, 6, 7,
+            0, 2, 4, // 4
+            4, 2, 6,
+            1, 5, 3, // 6
+            5, 7, 3,
+            0, 4, 1, // 8
+            4, 5, 1,
+            2, 3, 6, // 10
+            6, 3, 7,
+        ]);
+
+        var width  = 1280;
+        var height = 720;
+
+        bgfx.init();
+        bgfx.reset(width, height, 0);
+        bgfx.setDebug(bgfx.DEBUG_TEXT);
+        bgfx.setViewClear(0, bgfx.CLEAR_COLOR|bgfx.CLEAR_DEPTH, 0x303030ff, 1, 0);
+
+        var vertDecl = new bgfx.VertexDecl();
+        vertDecl.begin();
+        vertDecl.add(bgfx.Attrib.POSITION, 3, bgfx.AttribType.FLOAT);
+        vertDecl.add(bgfx.Attrib.COLOR0,   4, bgfx.AttribType.FLOAT);
+        vertDecl.end();
+
+        var vbh = bgfx.createVertexBuffer(s_cubeVertices, vertDecl);
+        var ibh = bgfx.createIndexBuffer(s_cubeIndices);
+
+        var vsh;
+        var fsh;
+        var program;
+
+        function loadShader (type, path) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = onShaderLoad.bind(xhr, type);
+            xhr.open('GET', path);
+            xhr.responseType = 'arraybuffer';
+            xhr.send();
+        }
+
+        function onShaderLoad (type) {
+            switch (type) {
+                case SHADER_TYPE_VERTEX:
+                    vsh = bgfx.createShader(this.response);
+                    break;
+                case SHADER_TYPE_FRAGMENT:
+                    fsh = bgfx.createShader(this.response);
+                    break;
+            }
+
+            if (vsh && fsh) {
+                program = bgfx.createProgram(vsh, fsh);
+
+                vsh = null;
+                fsh = null;
+                render();
+            }
+        }
+
+        loadShader(SHADER_TYPE_VERTEX, 'vs_cubes.bin');
+        loadShader(SHADER_TYPE_FRAGMENT, 'fs_cubes.bin');
+
+        var at  = new bgfx.Vector3(0, 0,   0);
+        var eye = new bgfx.Vector3(0, 0, -35);
+
+        var view = new bgfx.Matrix44();
+        var proj = new bgfx.Matrix44();
+        var mtx  = new bgfx.Matrix44();
+
+        bgfx.mtxLookAt(view, eye, at);
+        bgfx.mtxProj(proj, 60, width/height, 0.1, 100);
+
+        var last = Date.now();
+
+        function render () {
+            var col;
+            var row;
+
+            var now   = Date.now();
+            var delta = now - last;
+            last = now;
+
+            bgfx.dbgTextClear(0, false);
+            bgfx.dbgTextPrintf(0, 1, 0x4f, 'bgfx/examples/01-cubes');
+            bgfx.dbgTextPrintf(0, 2, 0x6f, 'Description: Rendering simple static mesh');
+            bgfx.dbgTextPrintf(0, 3, 0x0f, 'Frame: ' + delta.toFixed(2) + '[ms]');
+
+            bgfx.setViewTransform(0, view, proj);
+            bgfx.setViewRect(0, 0, 0, width, height);
+            bgfx.submit();
+
+            // Submit 11x11 cubes.
+            for (row = 0; row < ROWS; ++row) {
+                for (col = 0; col < COLS; ++col) {
+                    bgfx.mtxIdentity(mtx);
+                    bgfx.mtxRotateXY(mtx, now/1000 + col*0.21, now/1000 + row*0.37);
+                    mtx[12] = -15 + col*3;
+                    mtx[13] = -15 + row*3;
+                    mtx[14] = 0;
+
+                    // Set model matrix for rendering.
+                    bgfx.setTransform(mtx);
+
+                    // Set vertex and fragment shaders.
+                    bgfx.setProgram(program);
+
+                    // Set vertex and index buffer.
+                    bgfx.setVertexBuffer(vbh);
+                    bgfx.setIndexBuffer(ibh);
+
+                    // Set render states.
+                    bgfx.setState();
+
+                    // Submit primitive for rendering to view 0.
+                    bgfx.submit();
+                }
+            }
+
+            bgfx.frame();
+
+            // setTimeout(function() {
+                requestAnimationFrame(render);
+            // }, 5000);
+        };
+    }());
+    </script>
+</body>
+</html>
